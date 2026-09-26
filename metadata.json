@@ -1,0 +1,6 @@
+{
+  "name": "Interconecta Terminales & UOCT GPS",
+  "description": "Plataforma de interconexión y visualización GPS en tiempo real para Barrio Terminales (Sur, Alameda, San Borja), Estación Central de Trenes EFE, seguimiento tipo Uber para pasajeros, asistente de audio y accesibilidad para personas ciegas (Luz Guía) y coordinación adaptativa con el Departamento de Semáforos de Chile (UOCT).",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

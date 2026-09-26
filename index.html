@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <script>
+      (function() {
+        // Intercept and prevent unhandled getter errors on window.fetch
+        window.addEventListener('error', function(e) {
+          if (e && e.message && e.message.includes('fetch') && e.message.includes('getter')) {
+            if (e.stopImmediatePropagation) e.stopImmediatePropagation();
+            if (e.preventDefault) e.preventDefault();
+            return true;
+          }
+        }, true);
+
+        try {
+          var _origFetch = window.fetch;
+          var _currentFetch = _origFetch ? _origFetch.bind(window) : undefined;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return typeof _currentFetch === 'function' ? _currentFetch.bind(window) : _currentFetch;
+            },
+            set: function(fn) {
+              _currentFetch = fn;
+            },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (err) {
+          // If window own property cannot be defined, attempt on prototype
+          try {
+            if (typeof Window !== 'undefined' && Window.prototype) {
+              var _protoFetch = Window.prototype.fetch;
+              var _curProto = _protoFetch ? _protoFetch.bind(window) : undefined;
+              Object.defineProperty(Window.prototype, 'fetch', {
+                get: function() {
+                  return typeof _curProto === 'function' ? _curProto.bind(window) : _curProto;
+                },
+                set: function(fn) {
+                  _curProto = fn;
+                },
+                configurable: true,
+                enumerable: true
+              });
+            }
+          } catch (e2) {}
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Interconecta Terminales & UOCT GPS</title>
+    <meta name="description" content="Plataforma de interconexión y visualización GPS en tiempo real para Barrio Terminales (Sur, Alameda, San Borja), Estación Central de Trenes EFE, seguimiento tipo Uber para pasajeros, asistente de audio y accesibilidad para personas ciegas (Luz Guía) y coordinación adaptativa con el Departamento de Semáforos de Chile (UOCT)." />
+    <meta property="og:title" content="Interconecta Terminales & UOCT GPS" />
+    <meta property="og:description" content="Plataforma de interconexión y visualización GPS en tiempo real para Barrio Terminales (Sur, Alameda, San Borja), Estación Central de Trenes EFE, seguimiento tipo Uber para pasajeros, asistente de audio y accesibilidad para personas ciegas (Luz Guía) y coordinación adaptativa con el Departamento de Semáforos de Chile (UOCT)." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  </head>
+  <body class="bg-slate-950 text-slate-100 antialiased overflow-x-hidden selection:bg-blue-600 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
